@@ -69,7 +69,57 @@ function createTable(data) {
   });
 }
 
+function clearInputs() {
+  heightInput.value = "";
+  weghtInput.value = "";
+}
+
+function validDigits(text) {
+  return text.replace(/[^0-9,]/g, "");
+}
+
+function calcImc(weight, height) {
+  const imc = (weight / (height * height)).toFixed(1); // formula do imc = peso / altura * altura tofixed = arrendonda numeros para uma casa apos a virgula
+
+  return imc;
+}
+
 // Inicialização
 createTable(data);
 
 // Eventos
+[heightInput, weghtInput].forEach((el) => {
+  el.addEventListener("input", (e) => {
+    const updateValue = validDigits(e.target.value);
+
+    e.target.value = updateValue;
+  });
+});
+
+calcBtn.addEventListener("click", (e) => {
+  e.preventDefault;
+
+  const weight = +weghtInput.value.replace(",", "."); //conversao de text para number. E virgula para ponto
+  const height = +heightInput.value.replace(",", ".");
+
+  if (!weight || !height) return; // validação para caso não tenha nenhuma das informações.
+
+  const imc = calcImc(weight, height);
+
+  let info;
+
+  data.forEach((item) => {
+    if (imc >= item.min && imc <= item.max) {
+      info = item.info;
+    }
+  });
+
+  console.log(info);
+
+  if (!info) return;
+});
+
+clearBtn.addEventListener("click", (e) => {
+  e.defaultPrevented();
+  clearInputs();
+});
