@@ -46,6 +46,14 @@ const weghtInput = document.querySelector("#weight");
 const calcBtn = document.querySelector("#calc-btn");
 const clearBtn = document.querySelector("#clear-btn");
 
+const calcContainer = document.querySelector("#calc-container");
+const resultContainer = document.querySelector("#result-container");
+
+const imcNumber = document.querySelector("#imc-number span");
+const imcInfo = document.querySelector("#imc-info span");
+
+const backBtn = document.querySelector("#back-btn");
+
 // Funções
 function createTable(data) {
   data.forEach((item) => {
@@ -72,6 +80,8 @@ function createTable(data) {
 function clearInputs() {
   heightInput.value = "";
   weghtInput.value = "";
+  imcNumber.classList = "";
+  imcInfo.classList = "";
 }
 
 function validDigits(text) {
@@ -82,6 +92,11 @@ function calcImc(weight, height) {
   const imc = (weight / (height * height)).toFixed(1); // formula do imc = peso / altura * altura tofixed = arrendonda numeros para uma casa apos a virgula
 
   return imc;
+}
+
+function showOrHideResult() {
+  calcContainer.classList.toggle("hide");
+  resultContainer.classList.toggle("hide");
 }
 
 // Inicialização
@@ -106,6 +121,7 @@ calcBtn.addEventListener("click", (e) => {
 
   const imc = calcImc(weight, height);
 
+  //   informação do calculo do imc
   let info;
 
   data.forEach((item) => {
@@ -114,12 +130,45 @@ calcBtn.addEventListener("click", (e) => {
     }
   });
 
-  console.log(info);
-
   if (!info) return;
+
+  //   Exibindo resultado do IMC
+
+  imcNumber.innerText = imc;
+  imcInfo.innerText = info;
+
+  switch (info) {
+    case "Magreza":
+      imcNumber.classList.add("low");
+      imcInfo.classList.add("low");
+      break;
+    case "Normal":
+      imcNumber.classList.add("good");
+      imcInfo.classList.add("good");
+      break;
+    case "SobrePeso":
+      imcNumber.classList.add("low");
+      imcInfo.classList.add("low");
+      break;
+    case "Obesidade":
+      imcNumber.classList.add("medium");
+      imcInfo.classList.add("medium");
+      break;
+    case "Obesidade grave":
+      imcNumber.classList.add("high");
+      imcInfo.classList.add("high");
+      break;
+  }
+
+  showOrHideResult();
 });
 
 clearBtn.addEventListener("click", (e) => {
   e.defaultPrevented();
   clearInputs();
+});
+
+backBtn.addEventListener("click", (e) => {
+  clearInputs();
+  showOrHideResult();
 });
